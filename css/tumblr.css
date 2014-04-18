@@ -1,0 +1,103 @@
+/* frame */
+.frame {
+	position: fixed;
+	z-index: 666;
+}
+#frame-top {
+	border-top: 10px solid #ffee22;
+	top: 0;
+	width: 100%;
+}
+#frame-left {
+	border-left: 10px solid #ffee22;
+	top: 0;
+	left: 0;
+	height: 100%;			
+}
+#frame-right {
+	border-right: 10px solid #ffee22;
+	top: 0;
+	right: 0;
+	height: 100%;
+}
+#frame-bottom {
+	border-top: 10px solid #ffee22;
+	bottom: 0;
+	width: 100%;
+}
+
+/* font */
+@font-face {
+	font-family: "unibody8";
+	src: url(http://procrastination.elisejakob.com/fonts/Unibody8Pro-Regular.otf);
+}
+@font-face {
+	font-family: "unibody8";
+	src: url(http://procrastination.elisejakob.com/fonts/Unibody8Pro-RegularItalic.otf);
+	font-style: italic;
+}
+@font-face {
+	font-family: "unibody8";
+	src: url(http://procrastination.elisejakob.com/fonts/Unibody8Pro-Bold.otf);
+	font-weight: 600;
+}
+@font-face {
+	font-family: "unibody8";
+	src: url(http://procrastination.elisejakob.com/fonts/Unibody8Pro-Black.otf);
+	font-weight: 800;
+}
+
+/*body,
+.attribution-tags,
+.attribution-tags li,
+.meta,
+h2,
+.index-page.grid .link-wrapper h2 {
+	font-family: "unibody8";
+	font-size: 8px;
+}*/
+
+
+/* things */
+
+body {
+	background-color: #fff;
+	color: #222;
+}
+
+#header h1 a {
+	font-family: "unibody8";
+	font-weight: 800;
+	font-size: 36px;
+	text-transform: none;
+	text-shadow: -4px 4px #222;
+	color: #ff395e;
+	-webkit-font-smoothing: subpixel-antialiased;
+}
+
+.post-wrapper {
+	webkit-box-shadow: 0 0px 0px rgba(0, 0, 0, 0.20);
+	-moz-box-shadow: 0 0px 0px rgba(0, 0, 0, 0.20);
+	box-shadow: 0 0px 0px rgba(0, 0, 0, 0.20);
+	background-clip: padding-box;
+	border-radius: 0;
+	background-color: #fff;
+}
+
+.photo .photo-wrapper {
+	border-radius: 0;
+}
+
+.link-wrapper h2 a {
+	background-color: #ff395e;
+	border-radius: 0;
+}
+
+a,
+a:visited {
+	color: #ff395e;
+	text-decoration: none;
+}
+a:hover {
+	color: #222;
+}

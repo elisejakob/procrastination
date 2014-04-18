@@ -1,0 +1,60 @@
+/*
+
+Copyright © David Bushell | @dbushell | http://dbushell.com/
+
+*/
+
+.field {
+  position: relative;
+  padding-bottom: 30px;
+  margin-bottom: 30px;
+  max-width: 320px;
+}
+
+.field_label {
+  display: block;
+  position: absolute;
+  top: 12px;
+  font-size: 12px;
+  line-height: 12px;
+  font-weight: bold;
+  color: #2996cc;
+}
+
+.field_input {
+  position: absolute;
+  display: block;
+  box-sizing: border-box;
+  font-size: 16px;
+  line-height: 20px;
+  padding: 5px 0;
+  height: 30px;
+  width: 100%;
+  border: 0;
+  outline: none;
+  border-bottom: 2px solid #bbb;
+  }
+  .field_input:valid {
+    position: relative;
+    top: 30px;
+    margin-top: -30px;
+  }
+
+  .field_input:focus {
+    border-bottom-color: #2996cc;
+  }
+}
+
+body {
+  padding: 30px;
+}
+
+hr {
+  display: block;
+  clear: both;
+  margin: 30px 0;
+  border: 0;
+  outline: 0;
+  height: 2px;
+  background: #ddd;
+}

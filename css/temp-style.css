@@ -1,0 +1,62 @@
+/* type */
+@font-face {
+	font-family: "unibody8";
+	src: url(http://procrastination.elisejakob.com/fonts/Unibody8Pro-Regular.otf);
+}
+@font-face {
+	font-family: "unibody8";
+	src: url(http://procrastination.elisejakob.com/fonts/Unibody8Pro-RegularItalic.otf);
+	font-style: italic;
+}
+@font-face {
+	font-family: "unibody8";
+	src: url(http://procrastination.elisejakob.com/fonts/Unibody8Pro-Bold.otf);
+	font-weight: 600;
+}
+@font-face {
+	font-family: "unibody8";
+	src: url(http://procrastination.elisejakob.com/fonts/Unibody8Pro-Black.otf);
+	font-weight: 800;
+}
+body {
+	font-family: "unibody8", monospace;
+}
+h1 {
+	margin-bottom: 0.4em;
+}
+
+#content { 
+	margin: 6% 10% 6% 12%;
+	line-height: 1.5; 
+	padding-bottom: 1.4em; 
+	text-align: center;
+}
+
+h1 {
+	font-size: 2em;
+	font-weight: 800;
+	margin-bottom: 0.4em;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+}
+
+
+/* --- THE RESPONSIVE TYPE --- */
+
+html {
+    -ms-text-size-adjust: 100%; /* 2 */
+    -webkit-text-size-adjust: 100%; /* 2 */
+}
+
+/* Large desktop */
+@media (min-width: 1120px) { body { font-size:100%;} }
+
+/* Portrait tablet to landscape and desktop */
+@media (min-width: 840px) and (max-width: 1119px) { body { font-size:95%;}}
+
+/* Landscape phone to portrait tablet */
+@media (max-width: 839px) { body { font-size:90%;}}
+
+/* Landscape phones and down */
+@media (max-width: 480px) { body { font-size:80%;}}
+

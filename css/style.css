@@ -1,0 +1,200 @@
+/* general */
+
+body {
+	background-image: url('');
+	background-repeat: repeat;
+	background-color: #ffee22;
+	text-align: center;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+#maingame {
+	width: 800px;
+	margin: auto;
+	margin-top: 10px;
+}
+
+
+
+/* frame */
+.frame {
+	position: fixed;
+	z-index: 666;
+}
+#frame-top {
+	border-top: 10px solid #ffee22;
+	top: 0;
+	width: 100%;
+}
+#frame-left {
+	border-left: 10px solid #ffee22;
+	top: 0;
+	left: 0;
+	height: 100%;			
+}
+#frame-right {
+	border-right: 10px solid #ffee22;
+	top: 0;
+	right: 0;
+	height: 100%;
+}
+#frame-bottom {
+	border-top: 10px solid #ffee22;
+	bottom: 0;
+	width: 100%;
+}
+
+/* ids & classes */
+
+#info {
+	position: fixed;
+	top: 0;
+	right: 0;
+	margin: 20px;
+	cursor: pointer;
+	text-align: right;
+	font-weight: 600;
+	font-size: 2em;
+}
+
+#header,
+#points {
+	text-align: center;
+	padding-bottom: 10px;
+}
+#timer {
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	border: none;
+	background: none;
+
+	text-align: center;
+	font-family: "unibody8";
+	font-weight: 600;
+	font-size: 2em;
+	color: #222;
+	margin-top: 10px;
+}
+#speechbubble {
+	position: fixed;
+	top: 0;
+	left: 0;
+	margin: 20px;
+}
+
+
+/* type */
+@font-face {
+	font-family: "unibody8";
+	src: url(http://procrastination.elisejakob.com/fonts/Unibody8Pro-Regular.otf);
+}
+@font-face {
+	font-family: "unibody8";
+	src: url(http://procrastination.elisejakob.com/fonts/Unibody8Pro-RegularItalic.otf);
+	font-style: italic;
+}
+@font-face {
+	font-family: "unibody8";
+	src: url(http://procrastination.elisejakob.com/fonts/Unibody8Pro-Bold.otf);
+	font-weight: 600;
+}
+@font-face {
+	font-family: "unibody8";
+	src: url(http://procrastination.elisejakob.com/fonts/Unibody8Pro-Black.otf);
+	font-weight: 800;
+}
+body {
+	font-family: "unibody8", monospace;
+}
+h1 {
+	color: #ff395e;
+	margin: 0;
+	text-shadow: -4px 4px #222;
+}
+a,
+a:visited {
+	color: #ff395e;
+	text-decoration: none;
+}
+a:hover {
+	color: #222;
+}
+
+
+
+/* animations */
+.bottom-margin {
+	margin-bottom: 50px;
+}
+.button {
+	background-color: #ffee22;
+	color: red;
+    display: inline-block;
+    height: 3em;
+    line-height: 3em;
+    padding: 0 20px 0 20px;
+    border-radius: 30px;
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+}
+.label {
+    display: block;
+    height: 100%;
+    position: relative;
+    top: 0%;
+    transition: top 0.35s;
+    width: 100%;
+}
+.button:hover .label {
+    top: -100%;
+}
+
+
+.oblo-blink {
+    background-image: url(http://procrastination.elisejakob.no/img/oblo-blink-steps.png);
+    display: inline-block;
+    height: 105px;
+    width: 110.5px;
+    cursor: pointer;
+}
+.oblo-blink:hover {
+    -webkit-animation: blink .5s steps(2) infinite;
+    -moz-animation: blink .5s steps(2) infinite;
+    animation: blink .5s steps(2) infinite;
+}
+@-webkit-keyframes blink {
+    from { background-position: 0 0; }
+    to { background-position: -222px 0; }
+}
+@-moz-keyframes blink {
+    from { background-position: 0 0; }
+    to { background-position: -222px 0; }
+}
+@keyframes blink {
+    from { background-position: 0 0; }
+    to { background-position: -222px 0; }
+}
+
+/* palette */
+#palette {
+	background-color: #000;
+	text-align: center;
+	max-width: 700px;
+	margin: auto;
+	padding: 10px 0;
+}
+
+.colorsquare {
+	display: inline-block;
+	width: 50px;
+	height: 50px;
+	margin: 10px;
+}
+
