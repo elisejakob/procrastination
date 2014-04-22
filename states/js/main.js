@@ -1,21 +1,5 @@
-var game = new Phaser.Game(800, 600, Phaser.AUTO, 'maingame');
+var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'maingame');
 // phaser.canvas istedenfor auto fordi opera ikke fikser valget mellom canvas og webgl
-
-
-var menuState = {
-    preload: function() {
-        game.load.image('background', 'http://procrastination.elisejakob.com/assets/background.png');
-        game.load.image('button', 'http://procrastination.elisejakob.com/assets/button-test.png');
-    },
-    create: function() {
-        this.game.add.sprite(0,0, 'background');
-        this.oblo = game.add.button(game.world.centerX, game.world.centerY, 'button', this.startGame, this);
-        this.oblo.anchor.setTo(0.5, 0.5);
-    },
-    startGame: function() {
-        this.game.state.start('main');
-    },
-};
 
 var mainState = {
 
@@ -73,7 +57,7 @@ var mainState = {
         // collision
         this.game.physics.arcade.collide(this.oblo, this.table);
         if (gameVar.input.keyboard.isDown(Phaser.Keyboard.ENTER) && this.oblo.body.touching) {
-            this.game.state.start('avoid');
+            console.log("Collision!");
         };
         
         // make speech bubble
@@ -140,24 +124,8 @@ var mainState = {
         }
     }
     */
-};
+}
 
-var avoidState = {
-    preload: function() {
-        game.load.image('background', 'http://procrastination.elisejakob.com/assets/background.png');
-        game.load.image('button', 'http://procrastination.elisejakob.com/assets/button-test.png');
-    },
-    create: function() {
-        this.game.add.sprite(0,0, 'background');
-        this.oblo = game.add.button(game.world.centerX, game.world.centerY, 'button', this.startGame, this);
-        this.oblo.anchor.setTo(0.5, 0.5);
-    },
-    startGame: function() {
-        this.game.state.start('main');
-    },
-};
+game.state.add('main', mainState);  
+game.state.start('main');
 
-game.state.add('menu', menuState); 
-game.state.add('main', mainState);
-game.state.add('avoid', avoidState);  
-game.state.start('menu');
