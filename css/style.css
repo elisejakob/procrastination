@@ -1,9 +1,9 @@
 /* general */
 
 body {
-	background-image: url('');
+	background-color: #9ae9ef;
+	background-image: url('http://procrastination.elisejakob.com/img/clouds.png');
 	background-repeat: repeat;
-	background-color: #ffee22;
 	text-align: center;
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
