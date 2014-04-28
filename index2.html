@@ -3,22 +3,21 @@
 <head>
 	<meta charset="utf-8">
 	<title>PROCRASTINATE!</title>
+	<link rel="shortcut icon" href="/favicon.png" type="image/png">
+  	<link rel="icon" href="/favicon.png" type="image/png">
 	<link rel="stylesheet" href="/css/style.css">
-	<script src="http://procrastination.elisejakob.com/js/jquery.min.js"></script>
-	<!--<script>
+	<script>
 	var title = document.title;
 	var intv = window.setInterval(function () {
-		document.title = document.title === 'REMEMBER ME' ? title : '';
+		document.title = document.title === '' ? title : '';
 	}, 1000);
-	</script>-->
+	</script>
+	<script src="http://procrastination.elisejakob.com/js/jquery.min.js"></script>
 	<script src="http://procrastination.elisejakob.com/js/affirmations.js"></script>
 	<script src="http://procrastination.elisejakob.com/js/definitions.js"></script>
 	<script type="text/javascript" src="http://procrastination.elisejakob.com/phaser/build/phaser.min.js"></script>
 	<script src="http://procrastination.elisejakob.com/js/maingame.js"></script>
 	<script src="http://procrastination.elisejakob.com/js/timer.js"></script>
-
-	<!--<script src="http://procrastination.elisejakob.com/js/testing.js"></script>-->
-
 </head>
 <body onLoad="timeSpent()">
 	<div id="frame-top" class="frame"></div>
@@ -26,10 +25,7 @@
 	<div id="frame-right" class="frame"></div>
 	<div id="frame-bottom" class="frame"></div>
 
-	<div id="header">
-		<h1>Procrastinate</h1>
-	</div>
-
+	<div id="message"><b class="shadowed">Procrastinate!<b></div>
 
 	<div id="info">
 		<a href="http://procrastination.elisejakob.com/spill/" title="games">G</a><br>
@@ -40,10 +36,6 @@
 
 	<div id="speechbubble"></div>
 	<div id="maingame"></div>
-
-
-
-
 
 	<div id="points">
 		<form name="display">
