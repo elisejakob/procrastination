@@ -62,6 +62,9 @@ h2,
 
 body {
 	background-color: #fff;
+	background-image: url('http://procrastination.elisejakob.com/img/clouds-alt-2.png');
+	background-repeat: repeat;
+	background-attachment: fixed;
 	color: #222;
 }
 

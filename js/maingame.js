@@ -1,6 +1,11 @@
 var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'maingame', null, true);
 // phaser.canvas istedenfor auto fordi opera ikke fikser valget mellom canvas og webgl
 
+var gameScore = 0;
+
+function scoreTick () {
+        gameScore++;
+    };
 
 // MENU
 
@@ -37,6 +42,7 @@ var mainState = {
         game.load.image('bed', 'http://procrastination.elisejakob.com/assets/bed.png');
         game.load.image('desk', 'http://procrastination.elisejakob.com/assets/desk.png');
         game.load.image('health', 'http://procrastination.elisejakob.com/assets/healthbar-test.png');
+        game.load.image('bookshelf', 'http://procrastination.elisejakob.com/assets/bookshelf.png');
 
         // stop key events from propagating up to the browser
         var preventedKeys = [
@@ -74,6 +80,10 @@ var mainState = {
         game.physics.arcade.enable(this.iphone);
         this.iphone.body.immovable = true;
 
+        this.bookshelf = game.add.sprite(400, 5, 'bookshelf');
+        game.physics.arcade.enable(this.bookshelf);
+        this.bookshelf.body.immovable = true;
+
         // oblo sprite
         this.oblo = game.add.sprite(game.world.centerX, game.world.centerY, 'oblo');
         game.physics.arcade.enable(this.oblo);
@@ -88,6 +98,13 @@ var mainState = {
 
         this.health = game.add.sprite(10, 590, 'health');
         this.health.anchor.setTo(0, 1);
+
+        // tick when oblo body velocity is 0
+        this.secondsInactive = 0;
+        function inactivityTick (self) {
+            self.secondsInactive++;
+        };
+        this.tickInterval = setInterval(inactivityTick, 1000, this);
     },
 
     update: function() {
@@ -103,6 +120,7 @@ var mainState = {
         this.game.physics.arcade.collide(this.oblo, this.trash);
         this.game.physics.arcade.collide(this.oblo, this.bed);
         this.game.physics.arcade.collide(this.oblo, this.desk);
+        this.game.physics.arcade.collide(this.oblo, this.bookshelf);
         if (gameVar.input.keyboard.isDown(Phaser.Keyboard.ENTER)) {
             if (game.physics.arcade.distanceBetween(this.oblo, this.iphone) < 100) {
                 document.getElementById('message').innerHTML = "Flappy hell! Press space!";
@@ -120,7 +138,7 @@ var mainState = {
                 //};
                 //setTimeout(labelDestroy, 1500, this.trashLabel);
                 document.getElementById('message').innerHTML = "Nope, there's only trash here!";
-                setTimeout(messageReset, 1500);
+                setTimeout(messageReset, 3000);
             } else if ((game.physics.arcade.distanceBetween(this.oblo, this.bed) < 200) && ((this.bedLabel == null) || (this.bedLabel.exists == false))) {
                 this.game.state.start('dream');
                 document.getElementById('message').innerHTML = "Crushed dreams";
@@ -128,9 +146,33 @@ var mainState = {
         };
         
         // make speech bubble
-        if ((this.oblo.body.velocity.x == 0) && (this.oblo.body.velocity.y == 0)) {
-                var obloSays = document.getElementById('message').innerHTML = '<span class="red">Oblo says:</span> <i>You will feel like it tomorrow!</i>';
-            };
+                var affirmation = [
+                    "We'll feel like it tomorrow!", 
+                    "Let's play just one more game!", 
+                    "We deserve to have fun!", 
+                    "We'll work better under pressure!", 
+                    "All work and no play makes Oblomov a dull boy!",
+                    "Pressure makes us more creative!",
+                    "We'll have lots of time to do our work later!",
+                    "Let's start working after we play another game!",
+                    "YOLO!",
+                    "Enjoy today! We might get hit by a bus tomorrow!",
+                    "We'll be more focused later!",
+                    "If we start tomorrow, we'll still have time to finish!",
+                    "Taking a break is taking care of ourselves!",
+                    "Our parents will love us anyway!"
+                ];
+                // resets inactivity counter from create function if oblo moves
+                if ((this.oblo.body.velocity.x != 0) || (this.oblo.body.velocity.y != 0)) {
+                    this.secondsInactive = 0;
+                };
+                if (this.secondsInactive > 12) {
+                    var randomAff = affirmation[Math.floor(Math.random() * affirmation.length)];
+                    document.getElementById('message').innerHTML = '<span class="red">Oblo says:</span> ' + randomAff;
+                    this.secondsInactive = 0;
+                    setTimeout(messageReset, 6000);
+                };
+
         /*    if ((this.oblo.body.velocity.x == 0) && (this.oblo.body.velocity.y == 0) && (this.speechbubble.alive == false)) {
                 //this.speechbubble.revive();
                 if ((this.oblo.position.x <= 400) && (this.oblo.position.y <= 300)) {
@@ -184,6 +226,45 @@ var mainState = {
             this.oblo.animations.stop();
         }
     },
+
+    shutdown: function() {
+        clearInterval(this.tickInterval);
+    },
+};
+
+// BOOKSHELF
+
+var bookState = {
+
+    preload: function() {
+        game.load.image('background', 'http://procrastination.elisejakob.com/assets/room-test-3.png');
+    },
+
+    create: function() {
+        // background sprite
+        this.game.add.sprite(0, 0, 'background');
+
+        this.complainInterval = setInterval(this.complainFunction, 5000, this);
+    },
+
+    update: function() {
+        if (this.game.input.keyboard.isDown(Phaser.Keyboard.ESC)) {
+            this.game.state.start('main');
+            document.getElementById('message').innerHTML = '<b class="shadowed">Procrastinate!</b>';
+            clearInterval(this.complainInterval);
+        }; 
+    },
+
+    complainFunction: function() {
+        var complain = [
+            "Books are boring!", 
+            "This feels like work!", 
+            "I don't like reading!", 
+             "This is no fun!"
+        ];
+        var randomCom = complain[Math.floor(Math.random() * complain.length)];
+        document.getElementById('message').innerHTML = '<span class="red">Oblo says:</span> ' + randomCom;
+    },
 };
 
 
@@ -193,7 +274,9 @@ var avoidState = {
     preload: function() {
         game.load.image('background', 'http://procrastination.elisejakob.com/assets/room-test-3.png');
         game.load.spritesheet('oblo', 'http://procrastination.elisejakob.com/assets/oblo-sprite-large.png', 76, 104, 12);
-        game.load.image('workObject', 'http://procrastination.elisejakob.com/spill/flappy/assets/pipe.png');
+        game.load.image('workObject1', 'http://procrastination.elisejakob.com/assets/work1.png');
+        game.load.image('workObject2', 'http://procrastination.elisejakob.com/assets/work2.png');
+        game.load.image('workObject3', 'http://procrastination.elisejakob.com/assets/work3.png');
     },
     create: function() {
         game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -210,27 +293,22 @@ var avoidState = {
         // enemies
         this.work = this.game.add.group();
         this.work.enableBody = true;
-        this.timer = this.game.time.events.loop(1000, this.addWork, this);
+        this.timer = this.game.time.events.loop(500, this.addWork, this);
 
         // esc label info
         var style = { font: "16px unibody8", fill: "#ffffff" };
         this.escLabel = this.game.add.text(game.world.centerX, 20, "press esc to go back", style);
         this.escLabel.anchor.setTo(0.5, 0);
+
+        // score ticks
+        this.scoreInterval = setInterval(scoreTick, 10000, this);
     },
     update: function() {
         //  reset oblo movement
         this.oblo.body.velocity.x = 0;
         this.oblo.body.velocity.y = 0;
 
-        if (this.game.input.keyboard.isDown(Phaser.Keyboard.DOWN)) {
-            //  move down
-            this.oblo.body.velocity.y = 200;
-            this.oblo.animations.play('down');
-        } else if (this.game.input.keyboard.isDown(Phaser.Keyboard.UP)) {
-            //  move up
-            this.oblo.body.velocity.y = -200;
-            this.oblo.animations.play('up');
-        } else if (this.game.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {
+        if (this.game.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {
             //  move left
             this.oblo.body.velocity.x = -200;
             this.oblo.animations.play('left');
@@ -248,6 +326,7 @@ var avoidState = {
         if (this.game.input.keyboard.isDown(Phaser.Keyboard.ESC)) {
             this.game.state.start('main');
             document.getElementById('message').innerHTML = '<b class="shadowed">Procrastinate!</b>';
+            clearInterval(this.scoreInterval);
         };        
     },
     restartGame: function() {
@@ -256,7 +335,13 @@ var avoidState = {
         this.game.time.events.remove(this.timer);
     },
     addWork: function() {
-        var workObject = this.work.create(Math.random() * 800, 0, 'workObject');
+        var workObjects = [
+                    'workObject1',
+                    'workObject2',
+                    'workObject3'
+                ];
+        var randomWork = workObjects[Math.floor(Math.random() * workObjects.length)];
+        var workObject = this.work.create(Math.random() * 800, 0, randomWork);
         workObject.body.velocity.y = 150;
         workObject.checkWorldBounds = true;
         workObject.outOfBoundsKill = true;
@@ -398,11 +483,6 @@ var dreamState = {
         this.timer = this.game.time.events.loop(1500,
             this.addRowOfPipes, this);
 
-        // score label
-        this.score = -1;
-        var style = { font: "30px unibody8", fill: "#222" };
-        this.labelScore = this.game.add.text(20, 20, "0", style);
-
         // esc label info
         var style = { font: "16px unibody8", fill: "#222" };
         this.escLabel = this.game.add.text(game.world.centerX, 20, "press esc to go back", style);
@@ -454,12 +534,10 @@ var dreamState = {
 
     addRowOfPipes: function() {
         var hole = Math.floor(Math.random() * 5) + 1;
-        this.score += 1;
-        this.labelScore.text = this.score;
-
         for (var i = 0; i < 8; i++)
             if (i != hole && i != hole +1)
                 this.addOnePipe(800, i * 60 + 10);
+        scoreTick();
     },
 };
 
@@ -468,7 +546,8 @@ var dreamState = {
 
 game.state.add('menu', menuState); 
 game.state.add('main', mainState);
+game.state.add('books', bookState); 
 game.state.add('avoid', avoidState);
 game.state.add('flappy', flappyState);
 game.state.add('dream', dreamState); 
-game.state.start('menu');
+game.state.start('books');

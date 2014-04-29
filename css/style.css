@@ -67,35 +67,19 @@ body {
 	font-weight: 600;
 	font-size: 30px;
 }
-
-#header,
 #points {
-	text-align: center;
+	width: 800px;
+	margin: auto;
 	padding-bottom: 10px;
 }
-#timer {
-	-webkit-appearance: none;
-	-moz-appearance: none;
-	appearance: none;
-	-webkit-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	border: none;
-	background: none;
-
-	text-align: center;
+#timer,
+#score {
 	font-family: "unibody8";
-	font-weight: 600;
-	font-size: 30px;
+	font-size: 16px;
 	color: #222;
-	margin-top: 10px;
 }
-#speechbubble {
-	position: fixed;
-	top: 0;
-	left: 0;
-	margin: 20px;
-}
+#timer { float: right; text-align: right; }
+#score { float: left; text-align: left; }
 
 
 /* type */

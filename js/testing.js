@@ -1,10 +1,19 @@
-setInterval(function image(){
-	var img = document.createElement("img");
-	img.src = "assets/speechbubble-2.png";
-	document.getElementById('speechbubble').appendChild(img);
-}, 9000);
+var startDate = new Date();
+var startTime = startDate.getTime();
 
-setInterval(function remove(){
-	var holdKjeft = document.getElementById('speechbubble');
-	holdKjeft.removeChild(holdKjeft.childNodes[0]);
-}, 4000);
+function secondsElapsed () { 
+var dateNow = new Date(); 
+var timeNow = dateNow.getTime(); 
+var timeDiff = timeNow - startTime; 
+var secondsElapsed = Math.floor ( timeDiff / 1000 ); 
+
+return ( secondsElapsed ); 
+} 
+
+function scoreCount () {
+	var secs = secondsElapsed();
+	var timeScore = Math.floor ( secs / 30 );
+	var score = timeScore + gameScore;
+	document.getElementById('score').innerHTML = "Score: " + score;
+	setTimeout( "scoreCount()", 500 ); 
+}

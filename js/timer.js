@@ -28,7 +28,8 @@ var hour = Math.floor ( mins / 60 );
 mins -= hour * 60;
 
 // DISPLAY THE FINAL OUTPUT TIME STRING
-document.display.timeElapsed.value = pad ( hour ) + ":" + pad ( mins ) + ":" + pad ( secs );
+//document.display.timeElapsed.value = pad ( hour ) + "h " + pad ( mins ) + "m " + pad ( secs ) + "s";
+document.getElementById('timer').innerHTML = "Time procrastinated: " + pad ( hour ) + "h " + pad ( mins ) + "m " + pad ( secs ) + "s";
 
 // RECURSIVELY RE-RUN THE FUNCTION EVERY SECOND
 setTimeout( "timeSpent ()", 1000 ); 

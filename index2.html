@@ -13,19 +13,18 @@
 	}, 1000);
 	</script>
 	<script src="http://procrastination.elisejakob.com/js/jquery.min.js"></script>
-	<script src="http://procrastination.elisejakob.com/js/affirmations.js"></script>
-	<script src="http://procrastination.elisejakob.com/js/definitions.js"></script>
 	<script type="text/javascript" src="http://procrastination.elisejakob.com/phaser/build/phaser.min.js"></script>
 	<script src="http://procrastination.elisejakob.com/js/maingame.js"></script>
 	<script src="http://procrastination.elisejakob.com/js/timer.js"></script>
+	<script src="http://procrastination.elisejakob.com/js/testing.js"></script>
 </head>
-<body onLoad="timeSpent()">
+<body onLoad="timeSpent(); scoreCount()">
 	<div id="frame-top" class="frame"></div>
 	<div id="frame-left" class="frame"></div>
 	<div id="frame-right" class="frame"></div>
 	<div id="frame-bottom" class="frame"></div>
 
-	<div id="message"><b class="shadowed">Procrastinate!<b></div>
+	<div id="message"><b class="shadowed">Procrastinate!</b></div>
 
 	<div id="info">
 		<a href="http://procrastination.elisejakob.com/spill/" title="games">G</a><br>
@@ -38,9 +37,8 @@
 	<div id="maingame"></div>
 
 	<div id="points">
-		<form name="display">
-		<input id="timer" name="timeElapsed" type="text" size=8>
-		</form>
+		<span id="score">Score: 0</span>
+		<span id="timer"></span>
 	</div>
 
 	<script>
