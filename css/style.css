@@ -49,9 +49,9 @@ body {
 /* ids & classes */
 
 #message {
-	width: 800px;
 	margin: auto;
 	font-size: 16px;
+	padding: 10px 30px 10px 30px;
 }
 .red {
 	color: #ff395e;
@@ -81,6 +81,29 @@ body {
 #timer { float: right; text-align: right; }
 #score { float: left; text-align: left; }
 
+#speechbubble-top,
+#speechbubble-middle,
+#speechbubble-bottom {
+	width: 700px;
+	margin: auto;
+}
+#speechbubble-top { 
+	margin-top: 20px;
+	background-image: url('http://procrastination.elisejakob.com/assets/speechbubble-top.png');
+	background-repeat: no-repeat;
+	height: 16px;
+}
+#speechbubble-middle {
+	background-image: url('http://procrastination.elisejakob.com/assets/speechbubble-middle.png');
+	background-repeat: repeat-y;
+	min-height: 60px;
+}
+#speechbubble-bottom {
+	background-image: url('http://procrastination.elisejakob.com/assets/speechbubble-bottom.png');
+	background-repeat: no-repeat;
+	height: 32px;
+}
+
 
 /* type */
 @font-face {
@@ -107,6 +130,7 @@ body {
 }
 b.shadowed {
 	font-size: 30px;
+	line-height: 28px;
 	color: #ff395e;
 	margin: 0;
 	text-shadow: -4px 4px #222;

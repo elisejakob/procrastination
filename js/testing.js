@@ -13,7 +13,7 @@ return ( secondsElapsed );
 function scoreCount () {
 	var secs = secondsElapsed();
 	var timeScore = Math.floor ( secs / 30 );
-	var score = timeScore + gameScore;
-	document.getElementById('score').innerHTML = "Score: " + score;
+	var totalScore = timeScore + gameScore;
+	document.getElementById('score').innerHTML = "Score: " + totalScore;
 	setTimeout( "scoreCount()", 500 ); 
 }

@@ -15,16 +15,18 @@
 	<script src="http://procrastination.elisejakob.com/js/jquery.min.js"></script>
 	<script type="text/javascript" src="http://procrastination.elisejakob.com/phaser/build/phaser.min.js"></script>
 	<script src="http://procrastination.elisejakob.com/js/maingame.js"></script>
-	<script src="http://procrastination.elisejakob.com/js/timer.js"></script>
-	<script src="http://procrastination.elisejakob.com/js/testing.js"></script>
 </head>
-<body onLoad="timeSpent(); scoreCount()">
+<body>
 	<div id="frame-top" class="frame"></div>
 	<div id="frame-left" class="frame"></div>
 	<div id="frame-right" class="frame"></div>
 	<div id="frame-bottom" class="frame"></div>
 
-	<div id="message"><b class="shadowed">Procrastinate!</b></div>
+	<div id="speechbubble-top"></div>
+	<div id="speechbubble-middle">
+		<div id="message"><b class="shadowed">Procrastinate!</b></div>
+	</div>
+	<div id="speechbubble-bottom"></div>
 
 	<div id="info">
 		<a href="http://procrastination.elisejakob.com/spill/" title="games">G</a><br>
@@ -37,7 +39,7 @@
 	<div id="maingame"></div>
 
 	<div id="points">
-		<span id="score">Score: 0</span>
+		<span id="score"></span>
 		<span id="timer"></span>
 	</div>
 

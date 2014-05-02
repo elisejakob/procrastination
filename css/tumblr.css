@@ -71,11 +71,18 @@ body {
 #header h1 a {
 	font-family: "unibody8";
 	font-weight: 800;
-	font-size: 36px;
+	font-size: 30px;
 	text-transform: none;
 	text-shadow: -4px 4px #222;
 	color: #ff395e;
 	-webkit-font-smoothing: subpixel-antialiased;
+}
+
+.sub-title {
+	font-family: "unibody8";
+	font-size: 16px;
+	color: #222;
+	opacity: 1;
 }
 
 .post-wrapper {
