@@ -6,43 +6,48 @@ var timeScore = 0;
 var totalScore = 0;
 var oldScore = 0;
 
-function scoreTick () {
+var oldTime = 0;
+
+function scoreTick() {
     gameScore++;
 };
 
 // score counter
-var startDate = new Date();
-var startTime = startDate.getTime();
+var startDate;
+var startTime;
 
-function secondsElapsed () { 
-var dateNow = new Date(); 
-var timeNow = dateNow.getTime(); 
-var timeDiff = timeNow - startTime; 
-var secondsElapsed = Math.floor ( timeDiff / 1000 ); 
+function secondsElapsed() { 
+    var dateNow = new Date(); 
+    var timeNow = dateNow.getTime(); 
+    var timeDiff = timeNow - startTime; 
+    var secondsElapsed = Math.floor(timeDiff / 1000); 
 
-return ( secondsElapsed ); 
+    return secondsElapsed; 
 }
 
-function timeSpent () { 
-var secs = secondsElapsed ();
+// time
+function timeSpent() { 
+    var secs = secondsElapsed() + oldTime;
 
-var mins = Math.floor ( secs / 60 );
-secs -= mins * 60;
+    var mins = Math.floor ( secs / 60 );
+    secs -= mins * 60;
 
-var hour = Math.floor ( mins / 60 );
-mins -= hour * 60;
+    var hour = Math.floor ( mins / 60 );
+    mins -= hour * 60;
 
-document.getElementById('timer').innerHTML = "Time procrastinated: " + pad ( hour ) + "h " + pad ( mins ) + "m " + pad ( secs ) + "s";
+    var totalTime = "Time procrastinated: " + pad(hour) + "h " + pad(mins) + "m " + pad(secs) + "s";
 
-setTimeout("timeSpent()", 1000); 
+    document.getElementById('timer').innerHTML = totalTime;
+
+    setTimeout("timeSpent()", 1000); 
 }
 
-function pad ( num )
-{
-return ( ( num > 9 ) ? num : "0" + num );
+function pad(num) {
+    return ((num > 9) ? num : "0" + num);
 } 
 
-function scoreCount () {
+// score
+function scoreCount() {
     var secs = secondsElapsed();
     timeScore = Math.floor ( secs / 30 );
     totalScore = oldScore + timeScore + gameScore;
@@ -51,47 +56,90 @@ function scoreCount () {
 }
 // end score counter
 
-saveScoreInterval = setInterval(saveScore, 1000);
-
-function saveScore () {
-    console.log(totalScore);
+function saveScore() {
     localStorage.setItem("myScore", totalScore);
+    localStorage.setItem("myTime", secondsElapsed() + oldTime);
 };
 
 if (localStorage.getItem("myScore")) {
     oldScore = parseInt(localStorage.getItem("myScore"));
+};
+if (localStorage.getItem("myTime")) {
+    oldTime = parseInt(localStorage.getItem("myTime"));
 }
+
 
 // MENU
 
 var menuState = {
     preload: function() {
-        game.load.image('continueButton', 'http://procrastination.elisejakob.com/assets/button-test.png');
-        game.load.image('newButton', 'http://procrastination.elisejakob.com/assets/coffeetable.png');
+        game.load.image('continueButton', 'http://procrastination.elisejakob.com/assets/continue-button.png');
+        game.load.image('newButton', 'http://procrastination.elisejakob.com/assets/new-button.png');
     },
     create: function() {
-        this.continueButton = game.add.button(game.world.centerX, game.world.centerY, 'continueButton', this.continueGame, this);
-        this.continueButton.anchor.setTo(0.5, 0.5);
-
-        this.newButton = game.add.button(game.world.centerX, game.world.centerY + 100, 'newButton', this.newGame, this);
+        this.newButton = game.add.button(game.world.centerX, game.world.centerY, 'newButton', this.newGame, this);
         this.newButton.anchor.setTo(0.5, 0.5);
+
+        if (localStorage.getItem("myScore")) {
+            this.continueButton = game.add.button(game.world.centerX, game.world.centerY + 70, 'continueButton', this.continueGame, this);
+            this.continueButton.anchor.setTo(0.5, 0.5);
+        }
 
         // instructions
         var style = { font: "16px unibody8", fill: "#222", align: "center" };
-        this.escLabel = this.game.add.text(game.world.centerX, 20, "controls: \narrow keys to move \nenter to interact with items \n- \npress the button or click enter \nto start the game", style);
-        this.escLabel.anchor.setTo(0.5, 0);
+        this.instructLabel = this.game.add.text(game.world.centerX, 50, "controls: \narrow keys to move \nenter to interact with items \n \n* \n \nclick to start the game", style);
+        this.instructLabel.anchor.setTo(0.5, 0);
     },
     continueGame: function() {
         this.game.state.start('main');
     },
     newGame: function() {
+        this.game.state.start('intro');
+    },
+};
+
+// intro
+
+var introState = {
+    preload: function() {
+        //images
+        game.load.image('startOblo', 'http://procrastination.elisejakob.com/assets/oblo-shrink-sheet1.gif');
+        game.load.image('startButton', 'http://procrastination.elisejakob.com/assets/start-button.png');
+    },
+    create: function() {
+        this.startOblo = this.game.add.sprite(game.world.centerX, 0, 'startOblo');
+        this.startOblo.anchor.setTo(0.5, 0);
+
+        // instructions
+        var style = { font: "16px unibody8", fill: "#222", align: "center" };
+        this.instructLabel = this.game.add.text(game.world.centerX, 450, "welcome :)\nthis is oblomov. he is your new procrastination spirit guide.\nplay games with him. please", style);
+        this.instructLabel.anchor.setTo(0.5, 1);
+
+        this.startButton = game.add.button(game.world.centerX, 530, 'startButton', this.obloShrink, this);
+        this.startButton.anchor.setTo(0.5, 1);
+    },
+    obloShrink: function() {
+        // oblo shrinks
+        var style = { font: "60px unibody8", fill: "#222", align: "center" };
+        this.instructLabel = this.game.add.text(game.world.centerX, 50, "(oblo shrinks) \n...", style);
+        this.instructLabel.anchor.setTo(0.5, 0);
+
+        // delayed start game function
+        setTimeout(this.startGame, 2000);
+    },
+    startGame: function() {
         window.localStorage.clear();
         oldScore = 0;
         totalScore = 0;
+        oldTime = 0;
         this.game.state.start('main');
     },
     update: function() {
         if (this.game.input.keyboard.isDown(Phaser.Keyboard.ENTER)) {
+            window.localStorage.clear();
+            oldScore = 0;
+            totalScore = 0;
+            oldTime = 0;
             this.game.state.start('main');
         };
     },
@@ -104,7 +152,7 @@ var mainState = {
 
     preload: function() {
         game.load.image('background', 'http://procrastination.elisejakob.com/assets/room-2.png');
-        game.load.spritesheet('oblo', 'http://procrastination.elisejakob.com/assets/oblo-sprite-large.png', 76, 104, 12);
+        game.load.spritesheet('oblo', 'http://procrastination.elisejakob.com/assets/oblo-sprite-large-2.png', 76, 104, 12);
         game.load.image('iphone', 'http://procrastination.elisejakob.com/assets/iphone.png');
         game.load.image('trash', 'http://procrastination.elisejakob.com/assets/trash.png');
         game.load.image('bed', 'http://procrastination.elisejakob.com/assets/bed.png');
@@ -126,7 +174,10 @@ var mainState = {
     },
 
     create: function() {
+        startDate = new Date();
+        startTime = startDate.getTime();
         timeSpent(); scoreCount();
+        setInterval(saveScore, 1000);
 
         game.physics.startSystem(Phaser.Physics.ARCADE);
 
@@ -296,6 +347,7 @@ var bookState = {
         game.load.image('book5', 'http://procrastination.elisejakob.com/assets/book5.png');
         game.load.image('book6', 'http://procrastination.elisejakob.com/assets/book6.png');
         game.load.image('book1-sheet', 'http://procrastination.elisejakob.com/assets/bookpage-test.png');
+        game.load.image('back', 'http://procrastination.elisejakob.com/assets/back.png');
     },
 
     create: function() {
@@ -317,6 +369,9 @@ var bookState = {
         var style = { font: "16px unibody8", fill: "#222", align: "center" };
         this.escLabel = this.game.add.text(game.world.centerX, 20, "* pick book with mouse or press esc to cancel *", style);
         this.escLabel.anchor.setTo(0.5, 0);
+
+        // back button
+        this.backButton = game.add.button(20, 20, 'back', this.backFunction, this);
     },
 
     bookFunc2: function() {
@@ -325,6 +380,11 @@ var bookState = {
 
     bookFunc6: function() {
         document.getElementById('message').innerHTML = '<span class="red">Oblo says:</span> No way! This book is way too long!';
+    },
+    backFunction: function() {
+        this.game.state.start('main');
+        document.getElementById('message').innerHTML = '<b class="shadowed">Procrastinate!</b>';
+        clearInterval(this.complainInterval);
     },
 
     update: function() {
@@ -359,6 +419,7 @@ var avoidState = {
         game.load.image('workObject1', 'http://procrastination.elisejakob.com/assets/work1.png');
         game.load.image('workObject2', 'http://procrastination.elisejakob.com/assets/work2.png');
         game.load.image('workObject3', 'http://procrastination.elisejakob.com/assets/work3.png');
+        game.load.image('back', 'http://procrastination.elisejakob.com/assets/back.png');
     },
     create: function() {
         game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -384,6 +445,9 @@ var avoidState = {
 
         // score ticks
         this.scoreInterval = setInterval(scoreTick, 10000, this);
+
+        // back button
+        this.backButton = game.add.button(20, 20, 'back', this.backFunction, this);
     },
     update: function() {
         //  reset oblo movement
@@ -410,6 +474,11 @@ var avoidState = {
             document.getElementById('message').innerHTML = '<b class="shadowed">Procrastinate!</b>';
             clearInterval(this.scoreInterval);
         };        
+    },
+    backFunction: function() {
+        this.game.state.start('main');
+        document.getElementById('message').innerHTML = '<b class="shadowed">Procrastinate!</b>';
+        clearInterval(this.scoreInterval);
     },
     restartGame: function() {
         // restart the game in the main state
@@ -440,6 +509,7 @@ var flappyState = {
         game.load.spritesheet('flappyoblo', 'http://procrastination.elisejakob.com/assets/flappyoblo.png', 68, 48, 3);
         game.load.image('topPipe', 'http://procrastination.elisejakob.com/assets/pipe-top.png');
         game.load.image('bottomPipe', 'http://procrastination.elisejakob.com/assets/pipe-bottom.png');
+        game.load.image('back', 'http://procrastination.elisejakob.com/assets/back.png');
     },
 
     // function after preload to set up game
@@ -481,12 +551,16 @@ var flappyState = {
         // score label
         this.flappyScore = -2;
         var style = { font: "16px unibody8", fill: "#222" };
-        this.labelScore = this.game.add.text(20, 20, "0", style);
+        this.labelScore = this.game.add.text(780, 20, "0", style);
+        this.labelScore.anchor.setTo(1, 0);
 
         // esc label info
         var style = { font: "16px unibody8", fill: "#222" };
         this.escLabel = this.game.add.text(game.world.centerX, 20, "* flap with space or press esc to cancel *", style);
         this.escLabel.anchor.setTo(0.5, 0);
+
+        // back button
+        this.backButton = game.add.button(20, 20, 'back', this.backFunction, this);
     },
 
     // function called 60 times per second
@@ -509,6 +583,11 @@ var flappyState = {
         var animation = this.game.add.tween(this.flappyOblo);
         animation.to({angle: -20}, 100);
         animation.start();
+    },
+
+    backFunction: function() {
+        this.game.state.start('main');
+        document.getElementById('message').innerHTML = '<b class="shadowed">Procrastinate!</b>';
     },
 
     restartGame: function() {
@@ -538,77 +617,32 @@ var flappyState = {
 
 var dreamState = {
     preload: function() {
-        game.load.image('bird', 'http://procrastination.elisejakob.com/assets/trash.png');
-        game.load.image('pipe', 'http://procrastination.elisejakob.com/spill/flappy/assets/pipe.png');
+        game.load.image('dream', 'http://procrastination.elisejakob.com/assets/trash.png');
+        game.load.image('back', 'http://procrastination.elisejakob.com/assets/back.png');
     },
     create: function() {
-        this.game.physics.startSystem(Phaser.Physics.ARCADE);
-
-        // make a bird and give it physics & gravity
-        this.bird = this.game.add.sprite(100, 245, 'bird');
-        this.game.physics.arcade.enable(this.bird);
-        this.bird.body.gravity.y = 600;
-        this.bird.anchor.setTo(-0.2, 0.5);
-        this.flappyOblo.animations.add('flap');
-        this.flappyOblo.animations.play('flap', 12, true);
-
-        // call the jump-function when space is hit
-        var spaceKey = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-        spaceKey.onDown.add(this.flap, this);
-
-        // make pipes
-        this.pipes = game.add.group();
-        this.pipes.createMultiple(20, 'pipe');
-        this.game.physics.arcade.enable(this.pipes);
-        this.timer = this.game.time.events.loop(1500, this.addRowOfPipes, this);
+        // stuff
+        this.dream = this.game.add.sprite(game.world.centerX, game.world.centerY, 'dream');
 
         // esc label info
         var style = { font: "16px unibody8", fill: "#222" };
         this.escLabel = this.game.add.text(game.world.centerX, 20, "* flap with space or press esc to cancel *", style);
         this.escLabel.anchor.setTo(0.5, 0);
+
+        // back button
+        this.backButton = game.add.button(20, 20, 'back', this.backFunction, this);
     },
     update: function() {
-        // bird angle upward when it flapss
-        if (this.bird.angle < 10)
-            this.bird.angle += 1;
-        // if the bird is dead, call the restart function
-        if (this.bird.inWorld == false) {
-            this.restartGame();
-        }
-
-        this.game.physics.arcade.overlap(this.bird, this.pipes, this.restartGame, null, this);
+        // happenings
 
         if (this.game.input.keyboard.isDown(Phaser.Keyboard.ESC)) {
             this.game.state.start('main');
             document.getElementById('message').innerHTML = '<b class="shadowed">Procrastinate!</b>';
         };
     },
-    flap: function() {
-        this.bird.body.velocity.y = -300;
-
-        var animation = this.game.add.tween(this.bird);
-        animation.to({angle: -10}, 100);
-        animation.start();
-    },
-    restartGame: function() {
-        // restart the game in the main state
-        this.game.state.start('dream');
-        this.game.time.events.remove(this.timer);
-    },
-    addOnePipe: function(x, y) {
-        var pipe = this.pipes.getFirstDead();
-        pipe.reset(x, y);
-        pipe.body.velocity.x = -200;
-        pipe.checkWorldBounds = true;
-        pipe.outOfBoundsKill = true;
-    },
-
-    addRowOfPipes: function() {
-        gameScore++;
-        var hole = Math.floor(Math.random() * 5) + 1;
-        for (var i = 0; i < 8; i++)
-            if (i != hole && i != hole +1)
-                this.addOnePipe(800, i * 60 + 10);
+    backFunction: function() {
+        this.game.state.start('main');
+        document.getElementById('message').innerHTML = '<b class="shadowed">Procrastinate!</b>';
     },
 };
 
@@ -628,6 +662,7 @@ var brainState = {
         game.load.image('youtube', 'http://procrastination.elisejakob.com/assets/youtube.png');
         game.load.image('iphone2', 'http://procrastination.elisejakob.com/assets/iphone2.png');
         game.load.image('bullet', 'http://procrastination.elisejakob.com/assets/bullet.png');
+        game.load.image('back', 'http://procrastination.elisejakob.com/assets/back.png');
     },
 
     create: function() {
@@ -661,6 +696,9 @@ var brainState = {
         this.brain.anchor.setTo(0.5, 0.5);
         this.game.physics.arcade.enable(this.brain);
         this.brain.body.immovable = true;
+
+        // back button
+        this.backButton = game.add.button(20, 20, 'back', this.backFunction, this);
     },
     update: function() {
         this.brain.rotation = game.physics.arcade.angleToPointer(this.brain);
@@ -726,12 +764,18 @@ var brainState = {
         this.distraction.body.velocity.setTo(50 + Math.random() * 50, 50 + Math.random() * 50);
 
     },
+    backFunction: function() {
+        this.game.state.start('main');
+        document.getElementById('message').innerHTML = '<b class="shadowed">Procrastinate!</b>';
+        clearInterval(this.distractionInterval);
+    },
 };
 
 
 // STATES
 
-game.state.add('menu', menuState); 
+game.state.add('menu', menuState);
+game.state.add('intro', introState); 
 game.state.add('main', mainState);
 game.state.add('books', bookState); 
 game.state.add('avoid', avoidState);
