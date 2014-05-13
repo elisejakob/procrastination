@@ -103,12 +103,15 @@ var menuState = {
 var introState = {
     preload: function() {
         //images
-        game.load.image('startOblo', 'http://procrastination.elisejakob.com/assets/oblo-shrink-sheet1.gif');
+        game.load.spritesheet('startOblo', 'http://procrastination.elisejakob.com/assets/oblo-shrinksheet.png', 276, 324, 28);
         game.load.image('startButton', 'http://procrastination.elisejakob.com/assets/start-button.png');
     },
     create: function() {
         this.startOblo = this.game.add.sprite(game.world.centerX, 0, 'startOblo');
         this.startOblo.anchor.setTo(0.5, 0);
+
+        //this.startOblo.animations.add('shrink', [0, 1, 2], 3, true);
+        this.startOblo.animations.add('shrink');
 
         // instructions
         var style = { font: "16px unibody8", fill: "#222", align: "center" };
@@ -120,9 +123,7 @@ var introState = {
     },
     obloShrink: function() {
         // oblo shrinks
-        var style = { font: "60px unibody8", fill: "#222", align: "center" };
-        this.instructLabel = this.game.add.text(game.world.centerX, 50, "(oblo shrinks) \n...", style);
-        this.instructLabel.anchor.setTo(0.5, 0);
+        this.startOblo.animations.play('shrink', 14, false);
 
         // delayed start game function
         setTimeout(this.startGame, 2000);
@@ -158,9 +159,21 @@ var mainState = {
         game.load.image('bed', 'http://procrastination.elisejakob.com/assets/bed.png');
         game.load.image('desk', 'http://procrastination.elisejakob.com/assets/desk.png');
         game.load.image('table', 'http://procrastination.elisejakob.com/assets/coffeetable.png');
-        game.load.image('health', 'http://procrastination.elisejakob.com/assets/healthbar-test.png');
+        game.load.spritesheet('health', 'http://procrastination.elisejakob.com/assets/healthbar-spritesheet.png', 196, 16, 10);
         game.load.image('bookshelf', 'http://procrastination.elisejakob.com/assets/bookshelf.png');
         game.load.image('smallBook', 'http://procrastination.elisejakob.com/assets/small-book.png');
+
+        // health bar images
+        game.load.image('health-10', 'http://procrastination.elisejakob.com/assets/health-10.png');
+        game.load.image('health-09', 'http://procrastination.elisejakob.com/assets/health-09.png');
+        game.load.image('health-08', 'http://procrastination.elisejakob.com/assets/health-08.png');
+        game.load.image('health-07', 'http://procrastination.elisejakob.com/assets/health-07.png');
+        game.load.image('health-06', 'http://procrastination.elisejakob.com/assets/health-06.png');
+        game.load.image('health-05', 'http://procrastination.elisejakob.com/assets/health-05.png');
+        game.load.image('health-04', 'http://procrastination.elisejakob.com/assets/health-04.png');
+        game.load.image('health-03', 'http://procrastination.elisejakob.com/assets/health-03.png');
+        game.load.image('health-02', 'http://procrastination.elisejakob.com/assets/health-02.png');
+        game.load.image('health-01', 'http://procrastination.elisejakob.com/assets/health-01.png');
 
         // stop key events from propagating up to the browser
         var preventedKeys = [
@@ -218,7 +231,7 @@ var mainState = {
         this.bookshelf.body.immovable = true;
 
         // oblo sprite
-        this.oblo = game.add.sprite(game.world.centerX, game.world.centerY, 'oblo');
+        this.oblo = game.add.sprite(game.world.centerX, game.world.centerY, 'oblo', 0);
         game.physics.arcade.enable(this.oblo);
         this.oblo.anchor.setTo(0.5, 0.5);
         this.oblo.body.collideWorldBounds = true;
@@ -229,7 +242,7 @@ var mainState = {
         this.oblo.animations.add('left', [6, 7, 8], 9, true);
         this.oblo.animations.add('right', [9, 10, 11], 9, true);
 
-        this.health = game.add.sprite(10, 590, 'health');
+        this.health = game.add.sprite(10, 590, 'health-10');
         this.health.anchor.setTo(0, 1);
 
         // tick when oblo body velocity is 0
@@ -245,7 +258,7 @@ var mainState = {
                     "We deserve to have fun!", 
                     "We'll work better under pressure!", 
                     "All work and no play makes Oblo a dull boy!",
-                    "Pressure makes us more creative!",
+                    "Play today, work extra hard tomorrow!",
                     "We'll have lots of time to do our work later!",
                     "YOLO!",
                     "We'll be more focused later!",
@@ -346,8 +359,11 @@ var bookState = {
         game.load.image('book4', 'http://procrastination.elisejakob.com/assets/book4.png');
         game.load.image('book5', 'http://procrastination.elisejakob.com/assets/book5.png');
         game.load.image('book6', 'http://procrastination.elisejakob.com/assets/book6.png');
-        game.load.image('book1-sheet', 'http://procrastination.elisejakob.com/assets/bookpage-test.png');
         game.load.image('back', 'http://procrastination.elisejakob.com/assets/back.png');
+        game.load.image('akrasia-book', 'http://procrastination.elisejakob.com/assets/akrasia-book.png');
+        game.load.image('escapism-book', 'http://procrastination.elisejakob.com/assets/escapism-book.png');
+        game.load.image('hyperbolic-book', 'http://procrastination.elisejakob.com/assets/hyperbolic-book.png');
+        game.load.image('dissonance-book', 'http://procrastination.elisejakob.com/assets/dissonance-book.png');
     },
 
     create: function() {
@@ -375,7 +391,19 @@ var bookState = {
     },
 
     bookFunc2: function() {
-        this.bookSheet1 = game.add.image(0, 0, 'book1-sheet');
+        this.akrasiaBook = game.add.image(0, 0, 'akrasia-book');
+    },
+
+    bookFunc3: function() {
+        this.escapismBook = game.add.image(0, 0, 'escapism-book');
+    },
+
+    bookFunc4: function() {
+        this.hyperbolicBook = game.add.image(0, 0, 'hyperbolic-book');
+    },
+
+    bookFunc5: function() {
+        this.dissonanceBook = game.add.image(0, 0, 'dissonance-book');
     },
 
     bookFunc6: function() {
