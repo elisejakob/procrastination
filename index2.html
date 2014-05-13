@@ -15,6 +15,13 @@
 	<script src="http://procrastination.elisejakob.com/js/jquery.min.js"></script>
 	<script type="text/javascript" src="http://procrastination.elisejakob.com/phaser/build/phaser.min.js"></script>
 	<script src="http://procrastination.elisejakob.com/js/maingame.js"></script>
+	<script>
+	jQuery(document).ready(function($) {
+		$("#info .menu-toggle").click(function(){
+			$("#info #menu").toggleClass("toggled");
+		});
+	});
+	</script>
 </head>
 <body>
 	<div id="frame-top" class="frame"></div>
@@ -29,10 +36,19 @@
 	<div id="speechbubble-bottom"></div>
 
 	<div id="info">
-		<a href="http://procrastination.elisejakob.com/spill/" title="games">G</a><br>
-		<a href="/html5/animations.html" title="experiments">E</a><br>
-		<a href="/html5/definitions.html" title="definitions">D</a><br>
-		<a href="/html5/affirmations/" title="affirmations">A</a><br>
+		<span title="info" class="menu-toggle">?</span><br>
+		<div id="menu">
+			<span class="controls">
+				controls:<br>
+				mouse<br>
+				arrows<br>
+				enter<br>
+				space<br>
+				esc
+			</span><br><br>
+			<a href="http://procrastination.elisejakob.com/about/" title="about">about</a><br>
+			<a href="http://deprocrastination.tumblr.com" title="blog">blog</a><br>
+		</div>
 	</div>
 
 	<div id="speechbubble"></div>

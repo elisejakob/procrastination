@@ -1,6 +1,8 @@
 var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'maingame', null, true);
 // phaser.canvas istedenfor auto fordi opera ikke fikser valget mellom canvas og webgl
 
+var countersStarted = false;
+
 var gameScore = 0;
 var timeScore = 0;
 var totalScore = 0;
@@ -8,9 +10,38 @@ var oldScore = 0;
 
 var oldTime = 0;
 
+var fun = 10;
+var sleep = 10;
+var drink = 10;
+
+function funTick() {
+    if (fun > 0 && (game.state.current == "main" || game.state.current == "books")) {
+        fun--;
+    } else if (fun < 10 && fun != 0) {
+        fun++;
+    }
+
+    if (fun == 0 || sleep == 0 || drink == 0) {
+        gameScore--;
+    }
+    console.log(fun);
+}
+
+function drinkTick() {
+    if (drink > 0) {
+        drink--;
+    } 
+}
+
+function sleepTick() {
+    if (sleep > 0) {
+        sleep--;
+    }
+}
+
 function scoreTick() {
     gameScore++;
-};
+}
 
 // score counter
 var startDate;
@@ -37,9 +68,7 @@ function timeSpent() {
 
     var totalTime = "Time procrastinated: " + pad(hour) + "h " + pad(mins) + "m " + pad(secs) + "s";
 
-    document.getElementById('timer').innerHTML = totalTime;
-
-    setTimeout("timeSpent()", 1000); 
+    document.getElementById('timer').innerHTML = totalTime; 
 }
 
 function pad(num) {
@@ -52,7 +81,6 @@ function scoreCount() {
     timeScore = Math.floor ( secs / 30 );
     totalScore = oldScore + timeScore + gameScore;
     document.getElementById('score').innerHTML = "Score: " + totalScore;
-    setTimeout("scoreCount()", 500); 
 }
 // end score counter
 
@@ -87,7 +115,7 @@ var menuState = {
 
         // instructions
         var style = { font: "16px unibody8", fill: "#222", align: "center" };
-        this.instructLabel = this.game.add.text(game.world.centerX, 50, "controls: \narrow keys to move \nenter to interact with items \n \n* \n \nclick to start the game", style);
+        this.instructLabel = this.game.add.text(game.world.centerX, 50, "controls: \narrow keys to move \nenter to interact with objects \n \n* \n \nclick to start the game", style);
         this.instructLabel.anchor.setTo(0.5, 0);
     },
     continueGame: function() {
@@ -157,23 +185,27 @@ var mainState = {
         game.load.image('iphone', 'http://procrastination.elisejakob.com/assets/iphone.png');
         game.load.image('trash', 'http://procrastination.elisejakob.com/assets/trash.png');
         game.load.image('bed', 'http://procrastination.elisejakob.com/assets/bed.png');
-        game.load.image('desk', 'http://procrastination.elisejakob.com/assets/desk.png');
+        game.load.spritesheet('desk', 'http://procrastination.elisejakob.com/assets/desk-sprite.png', 120, 84, 2);
         game.load.image('table', 'http://procrastination.elisejakob.com/assets/coffeetable.png');
         game.load.spritesheet('health', 'http://procrastination.elisejakob.com/assets/healthbar-spritesheet.png', 196, 16, 10);
         game.load.image('bookshelf', 'http://procrastination.elisejakob.com/assets/bookshelf.png');
         game.load.image('smallBook', 'http://procrastination.elisejakob.com/assets/small-book.png');
 
         // health bar images
+        game.load.image('fun-icon', 'http://procrastination.elisejakob.com/assets/fun-icon-alt.png');
+        game.load.image('drink-icon', 'http://procrastination.elisejakob.com/assets/drink-icon.png');
+        game.load.image('sleep-icon', 'http://procrastination.elisejakob.com/assets/sleep-icon.png');
         game.load.image('health-10', 'http://procrastination.elisejakob.com/assets/health-10.png');
-        game.load.image('health-09', 'http://procrastination.elisejakob.com/assets/health-09.png');
-        game.load.image('health-08', 'http://procrastination.elisejakob.com/assets/health-08.png');
-        game.load.image('health-07', 'http://procrastination.elisejakob.com/assets/health-07.png');
-        game.load.image('health-06', 'http://procrastination.elisejakob.com/assets/health-06.png');
-        game.load.image('health-05', 'http://procrastination.elisejakob.com/assets/health-05.png');
-        game.load.image('health-04', 'http://procrastination.elisejakob.com/assets/health-04.png');
-        game.load.image('health-03', 'http://procrastination.elisejakob.com/assets/health-03.png');
-        game.load.image('health-02', 'http://procrastination.elisejakob.com/assets/health-02.png');
-        game.load.image('health-01', 'http://procrastination.elisejakob.com/assets/health-01.png');
+        game.load.image('health-9', 'http://procrastination.elisejakob.com/assets/health-09.png');
+        game.load.image('health-8', 'http://procrastination.elisejakob.com/assets/health-08.png');
+        game.load.image('health-7', 'http://procrastination.elisejakob.com/assets/health-07.png');
+        game.load.image('health-6', 'http://procrastination.elisejakob.com/assets/health-06.png');
+        game.load.image('health-5', 'http://procrastination.elisejakob.com/assets/health-05.png');
+        game.load.image('health-4', 'http://procrastination.elisejakob.com/assets/health-04.png');
+        game.load.image('health-3', 'http://procrastination.elisejakob.com/assets/health-03.png');
+        game.load.image('health-2', 'http://procrastination.elisejakob.com/assets/health-02.png');
+        game.load.image('health-1', 'http://procrastination.elisejakob.com/assets/health-01.png');
+        game.load.image('health-0', 'http://procrastination.elisejakob.com/assets/health-00.png');
 
         // stop key events from propagating up to the browser
         var preventedKeys = [
@@ -189,8 +221,15 @@ var mainState = {
     create: function() {
         startDate = new Date();
         startTime = startDate.getTime();
-        timeSpent(); scoreCount();
-        setInterval(saveScore, 1000);
+        if (countersStarted == false) {
+            setInterval(timeSpent, 1000); 
+            setInterval(scoreCount, 500);
+            setInterval(funTick, 20000);
+            setInterval(drinkTick, 35000);
+            setInterval(sleepTick, 56000);
+            setInterval(saveScore, 1000);
+            countersStarted = true;
+        };
 
         game.physics.startSystem(Phaser.Physics.ARCADE);
 
@@ -207,14 +246,16 @@ var mainState = {
         this.bed.anchor.setTo(1, 0.5);
         this.bed.body.immovable = true;
 
-        this.desk = game.add.sprite(200, 85, 'desk');
+        this.desk = game.add.sprite(200, 85, 'desk', 0);
         game.physics.arcade.enable(this.desk);
         this.desk.anchor.setTo(0.5, 0.5);
         this.desk.body.immovable = true;
+        // desk animation
+        this.desk.animations.add('blink');
 
-        this.table = game.add.sprite(500, 592, 'table');
+        this.table = game.add.sprite(500, 550, 'table');
         game.physics.arcade.enable(this.table);
-        this.table.anchor.setTo(0.5, 1);
+        this.table.anchor.setTo(0.5, 0.5);
         this.table.body.immovable = true;
 
         this.iphone = game.add.sprite(100, 400, 'iphone');
@@ -242,8 +283,21 @@ var mainState = {
         this.oblo.animations.add('left', [6, 7, 8], 9, true);
         this.oblo.animations.add('right', [9, 10, 11], 9, true);
 
-        this.health = game.add.sprite(10, 590, 'health-10');
-        this.health.anchor.setTo(0, 1);
+        // needs
+        this.funIcon = game.add.sprite(10, 534, 'fun-icon');
+        this.funIcon.anchor.setTo(0, 1);
+        this.funBubbles = game.add.sprite(48, 530, 'health-10');
+        this.funBubbles.anchor.setTo(0, 1);
+
+        this.drinkIcon = game.add.sprite(10, 564, 'drink-icon');
+        this.drinkIcon.anchor.setTo(0, 1);
+        this.drinkBubbles = game.add.sprite(48, 560, 'health-10');
+        this.drinkBubbles.anchor.setTo(0, 1);
+
+        this.sleepIcon = game.add.sprite(10, 594, 'sleep-icon');
+        this.sleepIcon.anchor.setTo(0, 1);
+        this.sleepBubbles = game.add.sprite(48, 590, 'health-10');
+        this.sleepBubbles.anchor.setTo(0, 1);
 
         // tick when oblo body velocity is 0
         this.secondsInactive = 0;
@@ -294,27 +348,30 @@ var mainState = {
                 document.getElementById('message').innerHTML = "Nope, there's only trash here!";
                 setTimeout(messageReset, 3000);
             } else if (game.physics.arcade.distanceBetween(this.oblo, this.bed) < 200) {
-                this.game.state.start('dream');
-                document.getElementById('message').innerHTML = "Crushed dreams";
+                sleep = 10;
             } else if (game.physics.arcade.distanceBetween(this.oblo, this.bookshelf) < 60) {
                 this.game.state.start('books');
                 document.getElementById('message').innerHTML = "The bookshelf!";
             } else if (game.physics.arcade.distanceBetween(this.oblo, this.smallBook) < 100) {
                 this.game.state.start('brain');
                 document.getElementById('message').innerHTML = "Defend your brain from distractions!";
-            };
-        };
+            } else if (game.physics.arcade.distanceBetween(this.oblo, this.table) < 100) {
+                drink = 10;
+            }
+        }
 
                 // resets inactivity counter from create function if oblo moves
                 if ((this.oblo.body.velocity.x != 0) || (this.oblo.body.velocity.y != 0)) {
                     this.secondsInactive = 0;
-                };
+                    //this.desk.animations.stop();
+                }
                 if (this.secondsInactive > 12) {
                     var randomAff = this.affirmation[Math.floor(Math.random() * this.affirmation.length)];
                     document.getElementById('message').innerHTML = '<span class="red">Oblo says:</span> ' + randomAff;
                     this.secondsInactive = 0;
                     setTimeout(messageReset, 6000);
-                };
+                    this.desk.animations.play('blink', 2, true);
+                }
 
         //  reset oblo movement
         this.oblo.body.velocity.x = 0;
@@ -340,6 +397,10 @@ var mainState = {
             //  stand still
             this.oblo.animations.stop();
         }
+
+        this.funBubbles.loadTexture('health-' + fun, 0);
+        this.drinkBubbles.loadTexture('health-' + drink, 0);
+        this.sleepBubbles.loadTexture('health-' + sleep, 0);
     },
 
     shutdown: function() {
@@ -364,6 +425,8 @@ var bookState = {
         game.load.image('escapism-book', 'http://procrastination.elisejakob.com/assets/escapism-book.png');
         game.load.image('hyperbolic-book', 'http://procrastination.elisejakob.com/assets/hyperbolic-book.png');
         game.load.image('dissonance-book', 'http://procrastination.elisejakob.com/assets/dissonance-book.png');
+        game.load.image('definitions-book', 'http://procrastination.elisejakob.com/assets/definitions-book.png');
+        game.load.image('closeButton', 'http://procrastination.elisejakob.com/assets/close.png');
     },
 
     create: function() {
@@ -379,7 +442,7 @@ var bookState = {
         this.book6 = game.add.button(700, 200, 'book6', this.bookFunc6, this);
 
         // oblo complaints
-        this.complainInterval = setInterval(this.complainFunction, 5000, this);
+        this.complainInterval = setInterval(this.complainFunction, 3000, this);
 
         // instructions
         var style = { font: "16px unibody8", fill: "#222", align: "center" };
@@ -390,25 +453,44 @@ var bookState = {
         this.backButton = game.add.button(20, 20, 'back', this.backFunction, this);
     },
 
+    bookFunc1: function() {
+        this.akrasiaBook = game.add.image(0, 0, 'definitions-book');
+        this.closeButton = game.add.button(770, 570, 'closeButton', this.closeBook, this);
+        this.closeButton.anchor.setTo(1, 1);
+    },
+
     bookFunc2: function() {
         this.akrasiaBook = game.add.image(0, 0, 'akrasia-book');
+        this.closeButton = game.add.button(770, 570, 'closeButton', this.closeBook, this);
+        this.closeButton.anchor.setTo(1, 1);
     },
 
     bookFunc3: function() {
         this.escapismBook = game.add.image(0, 0, 'escapism-book');
+        this.closeButton = game.add.button(770, 570, 'closeButton', this.closeBook, this);
+        this.closeButton.anchor.setTo(1, 1);
     },
 
     bookFunc4: function() {
         this.hyperbolicBook = game.add.image(0, 0, 'hyperbolic-book');
+        this.closeButton = game.add.button(770, 570, 'closeButton', this.closeBook, this);
+        this.closeButton.anchor.setTo(1, 1);
     },
 
     bookFunc5: function() {
         this.dissonanceBook = game.add.image(0, 0, 'dissonance-book');
+        this.closeButton = game.add.button(770, 570, 'closeButton', this.closeBook, this);
+        this.closeButton.anchor.setTo(1, 1);
     },
 
     bookFunc6: function() {
         document.getElementById('message').innerHTML = '<span class="red">Oblo says:</span> No way! This book is way too long!';
     },
+
+    closeBook: function() {
+        clearInterval(this.complainInterval);
+        this.game.state.start('books');
+    }, 
     backFunction: function() {
         this.game.state.start('main');
         document.getElementById('message').innerHTML = '<b class="shadowed">Procrastinate!</b>';
@@ -641,39 +723,6 @@ var flappyState = {
     },
 };
 
-// DREAM GAME
-
-var dreamState = {
-    preload: function() {
-        game.load.image('dream', 'http://procrastination.elisejakob.com/assets/trash.png');
-        game.load.image('back', 'http://procrastination.elisejakob.com/assets/back.png');
-    },
-    create: function() {
-        // stuff
-        this.dream = this.game.add.sprite(game.world.centerX, game.world.centerY, 'dream');
-
-        // esc label info
-        var style = { font: "16px unibody8", fill: "#222" };
-        this.escLabel = this.game.add.text(game.world.centerX, 20, "* flap with space or press esc to cancel *", style);
-        this.escLabel.anchor.setTo(0.5, 0);
-
-        // back button
-        this.backButton = game.add.button(20, 20, 'back', this.backFunction, this);
-    },
-    update: function() {
-        // happenings
-
-        if (this.game.input.keyboard.isDown(Phaser.Keyboard.ESC)) {
-            this.game.state.start('main');
-            document.getElementById('message').innerHTML = '<b class="shadowed">Procrastinate!</b>';
-        };
-    },
-    backFunction: function() {
-        this.game.state.start('main');
-        document.getElementById('message').innerHTML = '<b class="shadowed">Procrastinate!</b>';
-    },
-};
-
 // BRAIN DEFENCE
 
 var fireRate = 100;
@@ -808,6 +857,5 @@ game.state.add('main', mainState);
 game.state.add('books', bookState); 
 game.state.add('avoid', avoidState);
 game.state.add('flappy', flappyState);
-game.state.add('dream', dreamState); 
 game.state.add('brain', brainState); 
 game.state.start('menu');

@@ -61,11 +61,38 @@ body {
 	position: fixed;
 	top: 0;
 	right: 0;
-	margin: 20px;
+	margin-top: 10px;
 	cursor: pointer;
 	text-align: right;
 	font-weight: 600;
+	font-size: 16px;
+
+	width: 128px;
+	overflow: hidden;
+}
+#info .controls {
+	font-weight: 400;
+}
+.menu-toggle {
 	font-size: 30px;
+	margin: 20px;
+}
+#menu {
+	background-color: #ffee22;
+	padding: 10px;
+	z-index: 100;
+
+	position: relative;
+    right: -128px;
+    transition: right 0.35s;
+    -webkit-transition: right 0.35s;
+    -moz-transition: right 0.35s;
+    -o-transition: right 0.35s;
+    width: 128px;
+}
+#menu.toggled {
+	display: block;
+	right: 20px;
 }
 #points {
 	width: 800px;
@@ -136,11 +163,13 @@ b.shadowed {
 	text-shadow: -4px 4px #222;
 }
 a,
-a:visited {
+a:visited,
+span.menu-toggle {
 	color: #ff395e;
 	text-decoration: none;
 }
-a:hover {
+a:hover,
+span.menu-toggle:hover {
 	color: #222;
 }
 
