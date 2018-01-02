@@ -17,7 +17,7 @@ var drink = 10;
 function funTick() {
     if (fun > 0 && (game.state.current == "main" || game.state.current == "books")) {
         fun--;
-    } else if (fun < 10 && fun != 0) {
+    } else if (fun < 10 && ((game.state.current != "main") && (game.state.current != "books"))) {
         fun++;
     }
 
@@ -105,17 +105,17 @@ var menuState = {
         game.load.image('newButton', 'http://procrastination.elisejakob.com/assets/new-button.png');
     },
     create: function() {
-        this.newButton = game.add.button(game.world.centerX, game.world.centerY, 'newButton', this.newGame, this);
+        this.newButton = game.add.button(game.world.centerX, game.world.centerY + 100, 'newButton', this.newGame, this);
         this.newButton.anchor.setTo(0.5, 0.5);
 
         if (localStorage.getItem("myScore")) {
-            this.continueButton = game.add.button(game.world.centerX, game.world.centerY + 70, 'continueButton', this.continueGame, this);
+            this.continueButton = game.add.button(game.world.centerX, game.world.centerY + 170, 'continueButton', this.continueGame, this);
             this.continueButton.anchor.setTo(0.5, 0.5);
         }
 
-        // instructions
+        // welcome message
         var style = { font: "16px unibody8", fill: "#222", align: "center" };
-        this.instructLabel = this.game.add.text(game.world.centerX, 50, "controls: \narrow keys to move \nenter to interact with objects \n \n* \n \nclick to start the game", style);
+        this.instructLabel = this.game.add.text(game.world.centerX, 50, "Welcome!\n \nThis is a game to help you procrastinate\nand to keep you distracted from\nwhat you were supposed to do today.\n \nClick the question mark in the\nupper right corner for instructions\non how to play.", style);
         this.instructLabel.anchor.setTo(0.5, 0);
     },
     continueGame: function() {
@@ -143,10 +143,10 @@ var introState = {
 
         // instructions
         var style = { font: "16px unibody8", fill: "#222", align: "center" };
-        this.instructLabel = this.game.add.text(game.world.centerX, 450, "welcome :)\nthis is oblomov. he is your new procrastination spirit guide.\nplay games with him. please", style);
+        this.instructLabel = this.game.add.text(game.world.centerX, 470, "This is Oblomov. He is a sloth.\nHe will be your procrastination spirit guide.", style);
         this.instructLabel.anchor.setTo(0.5, 1);
 
-        this.startButton = game.add.button(game.world.centerX, 530, 'startButton', this.obloShrink, this);
+        this.startButton = game.add.button(game.world.centerX, 550, 'startButton', this.obloShrink, this);
         this.startButton.anchor.setTo(0.5, 1);
     },
     obloShrink: function() {
@@ -189,7 +189,8 @@ var mainState = {
         game.load.image('table', 'http://procrastination.elisejakob.com/assets/coffeetable.png');
         game.load.spritesheet('health', 'http://procrastination.elisejakob.com/assets/healthbar-spritesheet.png', 196, 16, 10);
         game.load.image('bookshelf', 'http://procrastination.elisejakob.com/assets/bookshelf.png');
-        game.load.image('smallBook', 'http://procrastination.elisejakob.com/assets/small-book.png');
+        game.load.image('chair', 'http://procrastination.elisejakob.com/assets/chair.png');
+        game.load.spritesheet('sleepsheet', 'http://procrastination.elisejakob.com/assets/sleep-sheet.png', 800, 600, 5);
 
         // health bar images
         game.load.image('fun-icon', 'http://procrastination.elisejakob.com/assets/fun-icon-alt.png');
@@ -219,9 +220,9 @@ var mainState = {
     },
 
     create: function() {
-        startDate = new Date();
-        startTime = startDate.getTime();
         if (countersStarted == false) {
+            startDate = new Date();
+            startTime = startDate.getTime();
             setInterval(timeSpent, 1000); 
             setInterval(scoreCount, 500);
             setInterval(funTick, 20000);
@@ -230,6 +231,9 @@ var mainState = {
             setInterval(saveScore, 1000);
             countersStarted = true;
         };
+
+        document.getElementById('message').innerHTML = '<b class="shadowed">Procrastinate!</b>';
+        document.getElementById('controls').innerHTML = 'use the arrow keys to move and press enter to interact with objects';
 
         game.physics.startSystem(Phaser.Physics.ARCADE);
 
@@ -241,9 +245,9 @@ var mainState = {
         this.trash.anchor.setTo(0.5, 0.5);
         this.trash.body.immovable = true;
 
-        this.bed = game.add.sprite(790, 340, 'bed');
+        this.bed = game.add.sprite(710, 340, 'bed');
         game.physics.arcade.enable(this.bed);
-        this.bed.anchor.setTo(1, 0.5);
+        this.bed.anchor.setTo(0.5, 0.5);
         this.bed.body.immovable = true;
 
         this.desk = game.add.sprite(200, 85, 'desk', 0);
@@ -258,13 +262,14 @@ var mainState = {
         this.table.anchor.setTo(0.5, 0.5);
         this.table.body.immovable = true;
 
-        this.iphone = game.add.sprite(100, 400, 'iphone');
+        this.iphone = game.add.sprite(300, 400, 'iphone');
         game.physics.arcade.enable(this.iphone);
         this.iphone.body.immovable = true;
 
-        this.smallBook = game.add.sprite(300, 400, 'smallBook');
-        game.physics.arcade.enable(this.smallBook);
-        this.smallBook.body.immovable = true;
+        this.chair = game.add.sprite(40, 340, 'chair');
+        this.chair.anchor.setTo(0.5, 0.5);
+        game.physics.arcade.enable(this.chair);
+        this.chair.body.immovable = true;
 
         this.bookshelf = game.add.sprite(480, 165, 'bookshelf');
         game.physics.arcade.enable(this.bookshelf);
@@ -298,6 +303,10 @@ var mainState = {
         this.sleepIcon.anchor.setTo(0, 1);
         this.sleepBubbles = game.add.sprite(48, 590, 'health-10');
         this.sleepBubbles.anchor.setTo(0, 1);
+
+        this.sleepFrame = game.add.sprite(0, 0, 'sleepsheet', 0);
+        // desk animation
+        this.sleepFrame.animations.add('sleepBlink');
 
         // tick when oblo body velocity is 0
         this.secondsInactive = 0;
@@ -336,26 +345,30 @@ var mainState = {
         this.game.physics.arcade.collide(this.oblo, this.desk);
         this.game.physics.arcade.collide(this.oblo, this.table);
         this.game.physics.arcade.collide(this.oblo, this.bookshelf);
-        this.game.physics.arcade.collide(this.oblo, this.smallBook);
+        this.game.physics.arcade.collide(this.oblo, this.chair);
         if (gameVar.input.keyboard.isDown(Phaser.Keyboard.ENTER)) {
             if (game.physics.arcade.distanceBetween(this.oblo, this.iphone) < 100) {
-                document.getElementById('message').innerHTML = "Flappy hell! Press space!";
                 this.game.state.start('flappy');
             } else if (game.physics.arcade.distanceBetween(this.oblo, this.desk) < 100) {
-                document.getElementById('message').innerHTML = "Avoid work!";
                 this.game.state.start('avoid');
             } else if (game.physics.arcade.distanceBetween(this.oblo, this.trash) < 100) {
                 document.getElementById('message').innerHTML = "Nope, there's only trash here!";
                 setTimeout(messageReset, 3000);
             } else if (game.physics.arcade.distanceBetween(this.oblo, this.bed) < 200) {
+                if (this.sleepFrame.alive == false) {
+                    this.sleepFrame.reset(0, 0);
+                }
+                document.getElementById('message').innerHTML = 'Taking a nap.';
+                setTimeout(messageReset, 2000);
                 sleep = 10;
+                this.sleepFrame.animations.play('sleepBlink', 2.5, false, true);
             } else if (game.physics.arcade.distanceBetween(this.oblo, this.bookshelf) < 60) {
                 this.game.state.start('books');
-                document.getElementById('message').innerHTML = "The bookshelf!";
-            } else if (game.physics.arcade.distanceBetween(this.oblo, this.smallBook) < 100) {
+            } else if (game.physics.arcade.distanceBetween(this.oblo, this.chair) < 150) {
                 this.game.state.start('brain');
-                document.getElementById('message').innerHTML = "Defend your brain from distractions!";
             } else if (game.physics.arcade.distanceBetween(this.oblo, this.table) < 100) {
+                document.getElementById('message').innerHTML = '<span class="red">Oblo says:</span> COFFEE! :) * <3';
+                setTimeout(messageReset, 3000);
                 drink = 10;
             }
         }
@@ -370,7 +383,7 @@ var mainState = {
                     document.getElementById('message').innerHTML = '<span class="red">Oblo says:</span> ' + randomAff;
                     this.secondsInactive = 0;
                     setTimeout(messageReset, 6000);
-                    this.desk.animations.play('blink', 2, true);
+                    this.desk.animations.play('blink', 1, true);
                 }
 
         //  reset oblo movement
@@ -430,6 +443,8 @@ var bookState = {
     },
 
     create: function() {
+        document.getElementById('message').innerHTML = 'Read a book?';
+        document.getElementById('controls').innerHTML = 'pick a book with the mouse pointer or press esc to exit';
         // background
         this.game.add.sprite(0, 0, 'books');
 
@@ -443,11 +458,6 @@ var bookState = {
 
         // oblo complaints
         this.complainInterval = setInterval(this.complainFunction, 3000, this);
-
-        // instructions
-        var style = { font: "16px unibody8", fill: "#222", align: "center" };
-        this.escLabel = this.game.add.text(game.world.centerX, 20, "* pick book with mouse or press esc to cancel *", style);
-        this.escLabel.anchor.setTo(0.5, 0);
 
         // back button
         this.backButton = game.add.button(20, 20, 'back', this.backFunction, this);
@@ -532,6 +542,9 @@ var avoidState = {
         game.load.image('back', 'http://procrastination.elisejakob.com/assets/back.png');
     },
     create: function() {
+        document.getElementById('message').innerHTML = 'Avoid work!';
+        document.getElementById('controls').innerHTML = 'use the arrow keys to move or press esc to exit';
+
         game.physics.startSystem(Phaser.Physics.ARCADE);
 
         // background sprite
@@ -548,13 +561,8 @@ var avoidState = {
         this.work.enableBody = true;
         this.timer = this.game.time.events.loop(500, this.addWork, this);
 
-        // esc label info
-        var style = { font: "16px unibody8", fill: "#222" };
-        this.escLabel = this.game.add.text(game.world.centerX, 20, "* use arrow keys to move or press esc to cancel *", style);
-        this.escLabel.anchor.setTo(0.5, 0);
-
         // score ticks
-        this.scoreInterval = setInterval(scoreTick, 10000, this);
+        this.scoreInterval = setInterval(scoreTick, 2500, this);
 
         // back button
         this.backButton = game.add.button(20, 20, 'back', this.backFunction, this);
@@ -594,6 +602,7 @@ var avoidState = {
         // restart the game in the main state
         this.game.state.start('avoid');
         this.game.time.events.remove(this.timer);
+        clearInterval(this.scoreInterval);
     },
     addWork: function() {
         var workObjects = [
@@ -624,6 +633,8 @@ var flappyState = {
 
     // function after preload to set up game
     create: function() {
+        document.getElementById('message').innerHTML = "Flappy Oblomov";
+        document.getElementById('controls').innerHTML = 'press space to flap or press esc to exit';
         // enable arcade physics system
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
 
@@ -664,11 +675,6 @@ var flappyState = {
         this.labelScore = this.game.add.text(780, 20, "0", style);
         this.labelScore.anchor.setTo(1, 0);
 
-        // esc label info
-        var style = { font: "16px unibody8", fill: "#222" };
-        this.escLabel = this.game.add.text(game.world.centerX, 20, "* flap with space or press esc to cancel *", style);
-        this.escLabel.anchor.setTo(0.5, 0);
-
         // back button
         this.backButton = game.add.button(20, 20, 'back', this.backFunction, this);
     },
@@ -685,6 +691,7 @@ var flappyState = {
         if (this.game.input.keyboard.isDown(Phaser.Keyboard.ESC)) {
             this.game.state.start('main');
             document.getElementById('message').innerHTML = '<b class="shadowed">Procrastinate!</b>';
+            this.game.time.events.remove(this.pipeTimer);
         };
     },
 
@@ -698,6 +705,7 @@ var flappyState = {
     backFunction: function() {
         this.game.state.start('main');
         document.getElementById('message').innerHTML = '<b class="shadowed">Procrastinate!</b>';
+        this.game.time.events.remove(this.pipeTimer);
     },
 
     restartGame: function() {
@@ -706,7 +714,6 @@ var flappyState = {
     },
 
     pipeMaker: function() {  
-        console.log("making pipesss");
         var pipeY = this.game.rnd.integerInRange(150, 500);
         this.pipe1 = this.pipes.create(800, pipeY, 'topPipe');
         this.pipe2 = this.pipes.create(800, pipeY, 'bottomPipe');
@@ -725,7 +732,7 @@ var flappyState = {
 
 // BRAIN DEFENCE
 
-var fireRate = 100;
+var fireRate = 160;
 var nextFire = 0;
 var bullets;
 var distractions;
@@ -743,12 +750,10 @@ var brainState = {
     },
 
     create: function() {
-        game.physics.startSystem(Phaser.Physics.ARCADE);
+        document.getElementById('message').innerHTML = "Defend your brain from distractions!";
+        document.getElementById('controls').innerHTML = 'use the mouse to aim and fire or press esc to exit';
 
-        // esc label info
-        var style = { font: "16px unibody8", fill: "#222" };
-        this.escLabel = this.game.add.text(game.world.centerX, 20, "* aim and fire with mouse or press esc to cancel *", style);
-        this.escLabel.anchor.setTo(0.5, 0);
+        game.physics.startSystem(Phaser.Physics.ARCADE);
 
         // bullet group
         bullets = game.add.group();
@@ -838,7 +843,7 @@ var brainState = {
         this.distraction = distractions.create(xPosition, yPosition, randomDistraction);
         this.distraction.body.collideWorldBounds = true;
         this.distraction.body.bounce.setTo(0.9, 0.9);
-        this.distraction.body.velocity.setTo(50 + Math.random() * 50, 50 + Math.random() * 50);
+        this.distraction.body.velocity.setTo(50 + Math.random() * 80, 50 + Math.random() * 80);
 
     },
     backFunction: function() {

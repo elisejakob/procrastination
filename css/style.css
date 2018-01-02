@@ -67,15 +67,14 @@ body {
 	font-weight: 600;
 	font-size: 16px;
 
-	width: 128px;
-	overflow: hidden;
+	width: 180px;
 }
-#info .controls {
+#info #controls {
 	font-weight: 400;
 }
 .menu-toggle {
 	font-size: 30px;
-	margin: 20px;
+	padding: 20px;
 }
 #menu {
 	background-color: #ffee22;
@@ -83,12 +82,12 @@ body {
 	z-index: 100;
 
 	position: relative;
-    right: -128px;
+    right: -180px;
     transition: right 0.35s;
     -webkit-transition: right 0.35s;
     -moz-transition: right 0.35s;
     -o-transition: right 0.35s;
-    width: 128px;
+    width: 180px;
 }
 #menu.toggled {
 	display: block;
@@ -97,7 +96,7 @@ body {
 #points {
 	width: 800px;
 	margin: auto;
-	padding-bottom: 10px;
+	margin-bottom: 50px;
 }
 #timer,
 #score {
@@ -129,6 +128,20 @@ body {
 	background-image: url('http://procrastination.elisejakob.com/assets/speechbubble-bottom.png');
 	background-repeat: no-repeat;
 	height: 32px;
+}
+#about {
+	width: 800px;
+	margin: 100px auto;
+	padding: 10px;
+	background: #ffee22;
+	text-align: left;
+}
+#about-body {
+	padding: 50px 100px;
+	text-align: center;
+}
+#about-body h2 {
+	font-size: 30px;
 }
 
 
@@ -172,6 +185,24 @@ a:hover,
 span.menu-toggle:hover {
 	color: #222;
 }
+h2 {
+	font-size: 16px;
+	font-weight: 600;
+	color: #ff395e;
+	margin: 0;
+}
+
+
+
+
+
+
+/* end */
+
+
+
+
+
 
 
 
